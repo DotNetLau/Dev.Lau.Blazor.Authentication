@@ -6,17 +6,7 @@ using Teqit.Extensions.Seq;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSeq("http://host.docker.internal:5341/");
-
-builder.Services
-    .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(x =>
-    {
-        builder.Configuration.Bind("AzureAd", x);
-        x.Prompt = "select_account";
-    });
-builder.Services
-    .AddAuthorization(policy => policy.FallbackPolicy = policy.DefaultPolicy);
+builder.Services.AddSeq("http://host.docker.internal:5341/", Serilog.Events.LogEventLevel.Debug);
 
 builder.Services
     .AddRazorComponents()
@@ -25,6 +15,26 @@ builder.Services
 builder.Services
     .AddControllersWithViews()
     .AddMicrosoftIdentityUI();
+
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(x =>
+    {
+        builder.Configuration.Bind("AzureAd", x);
+        x.Prompt = "select_account";
+    });
+
+builder.Services.AddAuthorization(options =>
+    {
+        options.FallbackPolicy = options.DefaultPolicy;
+        options.AddPolicy("Weather.Read", policy =>
+        {
+            policy.RequireRole("Weather.Read");
+        });
+        options.AddPolicy("Counter.Read", policy =>
+        {
+            policy.RequireRole("Counter.Read");
+        });
+    });
 
 var app = builder.Build();
 

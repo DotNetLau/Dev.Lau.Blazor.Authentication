@@ -1,9 +1,26 @@
 ﻿@page "/weather"
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @attribute [StreamRendering]
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Weather.Read")]
 
 <PageTitle>Weather</PageTitle>
+
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <Authorizing>Working on it</Authorizing>
+        <Authorized>Hallo</Authorized>
+        <NotAuthorized>Meut niet</NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
+
+<CascadingAuthenticationState>
+    <AuthorizeView Roles="Weather.Read">
+        <Authorizing>Nog een keer proberen</Authorizing>
+        <Authorized>Nog eens hallo</Authorized>
+        <NotAuthorized>Meut nog steeds niet</NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 <h1>Weather</h1>
 

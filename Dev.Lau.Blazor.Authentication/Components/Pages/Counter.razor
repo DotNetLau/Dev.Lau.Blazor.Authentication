@@ -1,5 +1,24 @@
 ﻿@page "/counter"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @rendermode InteractiveServer
+@* @attribute [Authorize(Policy = "Counter.Read")] @* This gives a hard 404, because I don't have this role. *@
+
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <Authorizing>Working on it</Authorizing>
+        <Authorized>Hallo</Authorized>
+        <NotAuthorized>Meut niet</NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
+
+<CascadingAuthenticationState>
+    <AuthorizeView Roles="Counter.Read">
+        <Authorizing>Nog een keer proberen</Authorizing>
+        <Authorized>Nog eens hallo</Authorized>
+        <NotAuthorized>Meut nog steeds niet</NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 <PageTitle>Counter</PageTitle>
 
