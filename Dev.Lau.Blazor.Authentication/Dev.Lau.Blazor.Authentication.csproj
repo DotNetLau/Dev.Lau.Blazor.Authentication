@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Identity.Web" Version="3.0.1" />
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.0.1" />
-    <PackageReference Include="Teqit.Extensions.Seq" Version="1.0.3" />
+    <PackageReference Include="Teqit.Extensions.Seq" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
