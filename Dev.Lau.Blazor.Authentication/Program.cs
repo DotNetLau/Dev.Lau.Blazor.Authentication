@@ -6,7 +6,7 @@ using Teqit.Extensions.Seq;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSeq(level: Serilog.Events.LogEventLevel.Debug, useDefaultDockerContainerUrl: true);
+builder.Services.AddSeq(useDefaultDockerContainerUrl: true);
 
 builder.Services
     .AddRazorComponents()
