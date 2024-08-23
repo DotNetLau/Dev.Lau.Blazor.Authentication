@@ -1,4 +1,7 @@
+using Azure.Messaging.ServiceBus;
 using Dev.Lau.Blazor.Authentication.Components;
+using Dev.Lau.Blazor.Authentication.HostedServices;
+using Dev.Lau.Blazor.Authentication.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
@@ -36,6 +39,19 @@ builder.Services.AddAuthorization(options =>
             policy.RequireRole("Counter.Read");
         });
     });
+
+builder.Services.AddScoped<ServiceBusClient>(x =>
+{
+    var clientOptions = new ServiceBusClientOptions
+    {
+        TransportType = ServiceBusTransportType.AmqpWebSockets
+    };
+
+    return new ServiceBusClient(builder.Configuration.GetValue<string>("Azb"), clientOptions);
+});
+builder.Services.AddScoped<ServiceBusService>();
+
+builder.Services.AddHostedService<ServiceBusListener>();
 
 var app = builder.Build();
 
