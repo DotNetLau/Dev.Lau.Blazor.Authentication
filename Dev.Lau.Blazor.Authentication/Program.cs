@@ -7,6 +7,7 @@ using Teqit.Extensions.Seq;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSeq(useDefaultDockerContainerUrl: true);
+builder.Services.AddHealthChecks();
 
 builder.Services
     .AddRazorComponents()
