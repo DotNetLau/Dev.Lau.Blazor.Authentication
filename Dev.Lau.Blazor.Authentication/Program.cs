@@ -52,6 +52,7 @@ app.UseAntiforgery();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHealthChecks("/health");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
