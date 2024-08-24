@@ -1,4 +1,7 @@
+using Azure.Core;
+using Azure.Identity;
 using Azure.Messaging.ServiceBus;
+using Azure.Security.KeyVault.Secrets;
 using Dev.Lau.Blazor.Authentication.Components;
 using Dev.Lau.Blazor.Authentication.HostedServices;
 using Dev.Lau.Blazor.Authentication.Services;
@@ -47,11 +50,32 @@ builder.Services.AddScoped<ServiceBusClient>(x =>
         TransportType = ServiceBusTransportType.AmqpWebSockets
     };
 
-    return new ServiceBusClient(builder.Configuration.GetValue<string>("Azb"), clientOptions);
+    var client = x.GetRequiredService<SecretClient>();
+
+    KeyVaultSecret secret = client.GetSecret("Azb");
+
+    string secretValue = secret.Value;
+
+    return new ServiceBusClient(secretValue, clientOptions);
 });
 builder.Services.AddScoped<ServiceBusService>();
 
 builder.Services.AddHostedService<ServiceBusListener>();
+
+builder.Services.AddScoped<SecretClient>(x =>
+{
+    SecretClientOptions options = new()
+    {
+        Retry =
+        {
+            Delay= TimeSpan.FromSeconds(2),
+            MaxDelay = TimeSpan.FromSeconds(16),
+            MaxRetries = 5,
+            Mode = RetryMode.Exponential
+         }
+    };
+    return new SecretClient(new Uri("https://teqit-playground-dev.vault.azure.net/"), new DefaultAzureCredential(), options);
+});
 
 var app = builder.Build();
 
